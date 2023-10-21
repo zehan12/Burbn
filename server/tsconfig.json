@@ -22,8 +22,9 @@
     "baseUrl": "src",
     "outDir": "./dist",
     "paths": {
+      "@/*": ["./src/*"],
       "@app": ["./app.ts"],
-    },
+    }
   },
   "exclude": [
     "dist",
