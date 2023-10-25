@@ -1,6 +1,8 @@
-import {model} from "mongoose";
+import { model } from "mongoose";
 import userSchema from "./user/schema";
 
-export default {
-  User: model("user", userSchema),
+const User = model("user", userSchema);
+
+export {
+  User,
 };

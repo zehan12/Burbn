@@ -2,7 +2,7 @@ import app from "@app";
 import { Server } from "http";
 import connectDB from "config/db";
 
-const PORT =   Math.floor(Math.random() * 4000);
+const PORT =  4000;
 
 connectDB();
 

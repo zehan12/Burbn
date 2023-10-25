@@ -6,14 +6,7 @@ import { PRODUCTION, TRUE } from "../constants/general";
  * Connect To Database
  */
 const connectDB = async () => {
-  let DB: string = "";
-  if (config.db.url?.includes("localhost")) {
-    const PASSWORD = config.db.password || "";
-    DB = config.db.url && config.db.url.replace("<PASSWORD>", PASSWORD);
-  } else {
-    DB = config.db.url || "";
-  }
-
+  let DB = config.db.url && config.db.url.replace("<password>", config.db.password);
   const options = {
     useNewUrlParser: TRUE,
     autoIndex: TRUE,

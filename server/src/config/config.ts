@@ -5,10 +5,9 @@ const config = {
   port: process.env.PORT || 4200,
   db: {
     url:
-      process.env.NODE_ENV === "TESTING_ENV"
-        ? process.env.MONGO_URL
-        : "mongodb://localhost:27017/burbn",
-    password: process.env.DATABASE_PASSWORD,
+      process.env.NODE_ENV === "TEST"
+        ? "mongodb://localhost:27017/burbn" : process.env.MONGO_URL,
+    password: process.env.DB_PASSWORD,
   },
 };
 
