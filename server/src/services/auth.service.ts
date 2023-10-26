@@ -134,7 +134,7 @@ export const signUp = asyncWrap(async (body: any, profileImage: any) => {
     errorMessage.error = `Operation was not successful due to ${error.message}`;
     return {
       type: "ERROR",
-      statusCode: statusCode.bad,
+      statusCode: statusCode.error,
       errorMessage,
     };
   }
@@ -263,14 +263,10 @@ export const login = asyncWrap(async (body: any) => {
     errorMessage.error = `Operation was not successful due to ${error.message}`;
     return {
       type: "ERROR",
-      statusCode: statusCode.bad,
+      statusCode: statusCode.error,
       errorMessage,
     };
   }
-});
-
-export const logout = asyncWrap(async () => {
-    
 });
 
 export const generateAccessToken = asyncWrap(async () => {});
