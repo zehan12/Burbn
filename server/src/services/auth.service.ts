@@ -94,9 +94,6 @@ export const signUp = asyncWrap(async (body: any, profileImage: any) => {
       let data = user;
 
       let payload = {
-        fullname: user.fullname,
-        username: user.username,
-        email: user.email,
         id: user._id,
       };
 
@@ -224,9 +221,6 @@ export const login = asyncWrap(async (body: any) => {
     // }
 
     let payload = {
-      fullname: user.fullname,
-      username: user.username,
-      email: user.email,
       id: user._id,
     };
 
@@ -269,4 +263,51 @@ export const login = asyncWrap(async (body: any) => {
   }
 });
 
-export const generateAccessToken = asyncWrap(async () => {});
+export const generateAccessToken = asyncWrap(
+  async (cookies: { refreshToken: string }) => {
+    const refresh_token = cookies.refreshToken;
+    try {
+      if (!refresh_token) {
+        errorMessage.error = "refresh token not found, Please Login now.";
+        return {
+          type: "Error",
+          statusCode: statusCode.bad,
+        };
+      }
+
+      const verifiedUserToken: any = jwt.verify(refresh_token, "refresh");
+      console.log(verifiedUserToken, "isVerified");
+      console.log(verifiedUserToken, "token");
+      const user = await User.findById(verifiedUserToken.id)
+        .select("-password")
+        .populate("followers following");
+
+      let payload = { user: user.id };
+      const accessToken = generateToken(payload, "access", "3d");
+      successMessage.message = "access token generated.";
+      return {
+        type: "Success",
+        statusCode:statusCode.success,
+        token:accessToken,
+        successMessage
+      };
+    } catch (error) {
+      errorMessage.error = error.message;
+      if (error.message.includes("jwt")) {
+        errorMessage.error = "Invalid JWT token, please login again.";
+      }
+      if (error.message.includes("invalid")) {
+        errorMessage.error = error.message + ", manipulation in token.";
+      }
+
+      if (error.message.includes("ObjectId")) {
+        errorMessage.error = "user not found.";
+      }
+      return {
+        type: "Error",
+        statusCode: statusCode.error,
+        errorMessage,
+      };
+    }
+  }
+);

@@ -73,7 +73,7 @@ export const logout = asyncWrap(async (req: Request, res: Response) => {
       .status(statusCode.success)
       .json({
         type: "Success",
-        token:req.cookies,
+        token: req.cookies,
         successMessage: "logout",
       });
   } catch (error) {
@@ -90,7 +90,7 @@ export const generateAccessToken = asyncWrap(
   async (req: Request, res: Response) => {
     // 1) Calling generate access token service
     const { type, errorMessage, successMessage, statusCode, data, token } =
-      await authService.generateAccessToken(req.body, {});
+      await authService.generateAccessToken(req.cookies);
 
     // 2) Check if something went wrong
     if (type === "Error") {
@@ -100,20 +100,19 @@ export const generateAccessToken = asyncWrap(
       });
     }
 
+    console.log(token,"token")
     //   3) If everything is OK, send data
-    return res
-      .cookie("refreshToken", token.refreshToken, {
-        httpOnly: true,
-        path: "/api/auth/refresh-token",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      })
-      .header("Authorization", token.accessToken)
-      .status(statusCode)
-      .json({
-        type,
-        successMessage,
-        data,
-        access_token: token.accessToken,
-      });
+    return res.status(statusCode).json({
+      type,
+      successMessage,
+      data,
+      access_token: token,
+    });
+    // .cookie("refreshToken", token.refreshToken, {
+    //   httpOnly: true,
+    //   path: "/api/auth/refresh-token",
+    //   maxAge: 30 * 24 * 60 * 60 * 1000,
+    // })
+    // .header("Authorization", token.accessToken)
   }
 );
