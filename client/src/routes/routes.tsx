@@ -3,6 +3,8 @@ import PageRender from "./PageRender";
 import Home from "../pages/Home";
 import AuthLayout from "../layout/AuthLayout";
 import NotFound from "../components/NotFound";
+import UnAuthLayout from "../layout/UnAuthLayout";
+import LogIn from "../pages/LogIn";
 
 const routes: RouteObject[] = [
     /**
@@ -20,12 +22,19 @@ const routes: RouteObject[] = [
         children: [
             { index: true, element: <Home /> },
             { path: ':page', Component: PageRender },
-            { path: ':page/:id', Component:PageRender },
+            { path: ':page/:id', Component: PageRender },
         ]
     },
     {
-        path:"*",
-        element:(<NotFound />)
+        path: "/authentication",
+        element: <UnAuthLayout />,
+        children: [
+            { path: "login", element: <LogIn /> },
+        ]
+    },
+    {
+        path: "*",
+        element: (<NotFound />)
     }
 
 ]

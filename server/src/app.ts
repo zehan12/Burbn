@@ -5,7 +5,10 @@ import router from "routes";
 
 const app: Express = express();
 
+// Set Body parser, reading data from body into req.body
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors());
 app.use(cookieParser());
 

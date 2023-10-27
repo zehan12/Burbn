@@ -108,11 +108,5 @@ export const generateAccessToken = asyncWrap(
       data,
       access_token: token,
     });
-    // .cookie("refreshToken", token.refreshToken, {
-    //   httpOnly: true,
-    //   path: "/api/auth/refresh-token",
-    //   maxAge: 30 * 24 * 60 * 60 * 1000,
-    // })
-    // .header("Authorization", token.accessToken)
   }
 );

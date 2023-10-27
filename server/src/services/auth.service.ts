@@ -139,48 +139,18 @@ export const signUp = asyncWrap(async (body: any, profileImage: any) => {
 
 export const login = asyncWrap(async (body: any) => {
   let { username, email, password } = body;
-
-  if (username !== username.replaceAll(" ", "")) {
-    errorMessage.error = "username with space not allowed";
-    return {
-      type: "Error",
-      errorMessage,
-      statusCode: statusCode.bad,
-    };
-  }
-
-  if (!checkUsername(username)) {
-    errorMessage.error = "username is not valid";
-    return {
-      type: "Error",
-      errorMessage,
-      statusCode: statusCode.bad,
-    };
-  }
-
+  // as per current scenario required either email or username for login
   if (typeof password === "number") {
     password = String(password);
   }
-
-  if (empty(email) || empty(password) || empty(username)) {
-    errorMessage.error =
-      "fullname, username, email and password field cannot be empty";
+  if (empty(password)) {
+    errorMessage.error = "password is required.";
     return {
       type: "Error",
       errorMessage,
       statusCode: statusCode.bad,
     };
   }
-
-  if (!isValidEmail(email)) {
-    errorMessage.error = "Please enter a valid Email";
-    return {
-      type: "Error",
-      errorMessage,
-      statusCode: statusCode.bad,
-    };
-  }
-
   if (!validatePassword(password)) {
     errorMessage.error = "Password must be more than eight(8) characters";
     return {
@@ -189,26 +159,59 @@ export const login = asyncWrap(async (body: any) => {
       statusCode: statusCode.bad,
     };
   }
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      errorMessage.error = "User with this email does not exist";
+
+  if (username) {
+    if (empty(username)) {
       return {
         type: "Error",
+        errorMessage: "Username with spaces is not allowed",
+        statusCode: statusCode.bad,
+      };
+    }
+
+    if (!checkUsername(username)) {
+      return {
+        type: "Error",
+        errorMessage: "Username is not valid",
+        statusCode: statusCode.bad,
+      };
+    }
+  }
+
+  if (email) {
+    if (!isValidEmail(email)) {
+      return {
+        type: "Error",
+        errorMessage: "Please enter a valid email",
+        statusCode: statusCode.bad,
+      };
+    }
+  }
+
+  if (!email && !username) {
+    return {
+      type: "Error",
+      errorMessage: "Username or email is required",
+      statusCode: statusCode.bad,
+    };
+  }
+
+  try {
+    const user = email
+      ? await User.findOne({ email })
+      : await User.findOne({ username });
+
+    if (!user) {
+      return {
+        type: "Error",
+        errorMessage: email
+          ? "User with this email does not exist"
+          : "User with this username does not exist",
         statusCode: statusCode.notfound,
-        errorMessage,
       };
     }
 
     let data = user;
-    if (username !== user.username) {
-      errorMessage.error = "Enter username is wrong!!";
-      return {
-        type: "Error",
-        statusCode: statusCode.notfound,
-        errorMessage,
-      };
-    }
 
     // const isPasswordMatch = await user.verifyPassword(password);
     // if (!isPasswordMatch) {
@@ -287,9 +290,9 @@ export const generateAccessToken = asyncWrap(
       successMessage.message = "access token generated.";
       return {
         type: "Success",
-        statusCode:statusCode.success,
-        token:accessToken,
-        successMessage
+        statusCode: statusCode.success,
+        token: accessToken,
+        successMessage,
       };
     } catch (error) {
       errorMessage.error = error.message;
