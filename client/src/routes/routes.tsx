@@ -1,10 +1,7 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 import PageRender from "./PageRender";
-import Home from "../pages/Home";
-import AuthLayout from "../layout/AuthLayout";
-import NotFound from "../components/NotFound";
-import UnAuthLayout from "../layout/UnAuthLayout";
-import LogIn from "../pages/LogIn";
+import { AuthLayout, UnAuthLayout } from "../layout";
+import { Home, LogIn, NotFound } from "../pages";
 
 const routes: RouteObject[] = [
     /**
