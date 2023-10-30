@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import NotFound from "../components/NotFound";
+import {NotFound} from "../pages";
 
 const generatePage = async (pageName: string) => {
   const component = () => import(`../pages/${pageName}`).then(module => ({ default: module.default }));

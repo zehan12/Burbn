@@ -23,7 +23,7 @@ const routes: RouteObject[] = [
         ]
     },
     {
-        path: "/authentication",
+        path: "/auth",
         element: <UnAuthLayout />,
         children: [
             { path: "login", element: <LogIn /> },
