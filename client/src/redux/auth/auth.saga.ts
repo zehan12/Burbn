@@ -2,7 +2,6 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { fetchLoginUserActionTypes } from "./auth.slice";
 import { requestToLoginUser } from "../../services/auth.service";
 
-// open brightness
 function* workerToFetchLoginUser(action: {
   type: string;
   payload: {
@@ -21,6 +20,15 @@ function* workerToFetchLoginUser(action: {
       email: action.payload.email,
       password: action.payload.password,
     });
+
+    if (response.type === "Error") {
+      // throw new Error(response.errorMessage);
+      yield put({
+        type: fetchLoginUserActionTypes.REJECTED,
+        payload: null,
+      });
+    }
+
     if (response) {
       yield put({
         type: fetchLoginUserActionTypes.FULFILLED,
@@ -41,10 +49,8 @@ function* workerToFetchLoginUser(action: {
   }
 }
 
-function* fetchLoginUserSaga(): Generator<unknown, void, unknown> {
+function* watchFetchLoginUserSaga(): Generator<unknown, void, unknown> {
   yield takeEvery(fetchLoginUserActionTypes.REQUEST, workerToFetchLoginUser);
 }
 
-export const authSagas = [
-    fetchLoginUserSaga()
-];
+export const authSagas = [watchFetchLoginUserSaga()];

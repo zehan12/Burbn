@@ -16,8 +16,12 @@ export const requestToLoginUser = async ({
       },
     });
     const json = await res.json();
+    if ( json.type === "Error" ) {
+      throw new Error("");
+    }
     return json;
   } catch (error) {
-    throw new Error("error unable  login!");
+    // throw new Error("error unable  login!");
+    return error;
   }
 };

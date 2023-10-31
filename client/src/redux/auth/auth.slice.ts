@@ -5,16 +5,22 @@ import {
   createAction,
   createSlice,
 } from "@reduxjs/toolkit";
-import { FULFILLED, PENDING, REJECTED } from "../../constant/general";
+import { FULFILLED, IDLE, PENDING, REJECTED } from "../../constant/general";
 
 interface AuthState {
   loginUser: object;
   fetchLoginUserStatus: string;
+  token: string;
+  requestToRegisterUser: string;
+  registerUserDetails: object;
 }
 
 const initialState: AuthState = {
   loginUser: {},
-  fetchLoginUserStatus: "IDLE",
+  fetchLoginUserStatus: IDLE,
+  token: "",
+  requestToRegisterUser: IDLE,
+  registerUserDetails: {},
 };
 
 // Creating a mapping of all the action types for fetch login user
@@ -35,14 +41,18 @@ const fetchLoginUserRejectedReducer = (state: AuthState) => {
 
 interface fetchLoginUserFulfilledAction extends Action {
   type: string;
-  payload: unknown;
+  payload: {
+    data: object;
+    access_token: string;
+  };
 }
 
 const fetchLoginUserFulfilledReducer = (
   state: AuthState,
   action: fetchLoginUserFulfilledAction
 ) => {
-  state.loginUser = action;
+  state.loginUser = action.payload.data;
+  state.token = action.payload.access_token;
   state.fetchLoginUserStatus = FULFILLED;
 };
 

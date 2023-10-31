@@ -1,7 +1,7 @@
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 import PageRender from "./PageRender";
 import { AuthLayout, UnAuthLayout } from "../layout";
-import { Home, LogIn, NotFound } from "../pages";
+import { Home, LogIn, NotFound, Register } from "../pages";
 
 const routes: RouteObject[] = [
     /**
@@ -27,6 +27,7 @@ const routes: RouteObject[] = [
         element: <UnAuthLayout />,
         children: [
             { path: "login", element: <LogIn /> },
+            { path: "register", element: <Register /> },
         ]
     },
     {

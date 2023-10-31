@@ -1,0 +1,28 @@
+{
+  "type": "Success",
+  "successMessage": {
+    "status": "success",
+    "message": "user login successfully"
+  },
+  "data": {
+    "_id": "653aa8a12802bba42441a1c1",
+    "fullname": "zehan",
+    "username": "zehan12",
+    "email": "zehan@gmail.com",
+    "password": "123456789",
+    "avatar": "https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png",
+    "role": "user",
+    "gender": "male",
+    "mobile": "",
+    "address": "",
+    "story": "",
+    "website": "",
+    "followers": [],
+    "following": [],
+    "saved": [],
+    "createdAt": "2023-10-26T17:57:53.197Z",
+    "updatedAt": "2023-10-26T17:57:53.197Z",
+    "__v": 0
+  },
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2FhOGExMjgwMmJiYTQyNDQxYTFjMSIsImlhdCI6MTY5ODY2MDc4MiwiZXhwIjoxNjk4NzQ3MTgyfQ.D7A1aCAqXySd_CUPX7uH4tvBxLdL4ZRZxpRfmP4BSe4"
+}
