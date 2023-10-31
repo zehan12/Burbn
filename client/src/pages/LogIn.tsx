@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchLoginUserRequest } from "../redux/auth/auth.slice";
-import { FULFILLED, PENDING } from "../constant/general";
+import { FULFILLED, PENDING, REJECTED } from "../constant/general";
 import { setIsLoading, setNotifyData } from "../redux/notify/notify.slice";
 import { Link } from "react-router-dom";
+import useRouter from "../hooks/useRouter";
 
 const LogIn = () => {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const fetchLoginUserStatus = useAppSelector(
         (state) => state.auth.fetchLoginUserStatus
@@ -16,48 +18,62 @@ const LogIn = () => {
     const token = useAppSelector(
         (state) => state.auth.token
     );
+    const loginError = useAppSelector(
+        (state) => state.auth.loginError
+    );
+    const loading = useAppSelector((state) => state.notify.loading);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = async () => {
-        console.log(email, password);
-        const user = { email, password };
-        const res = await fetch("http://localhost:4000/api/auth/login", {
-            method: "POST",
-            body: JSON.stringify(user),
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        // if () router.history("/");
-        const json = await res.json();
-        console.log(json);
-    }
-
     const handleLogin = () => {
-        dispatch(fetchLoginUserRequest({email,password}));
+        dispatch(fetchLoginUserRequest({ email, password }));
     }
 
     const click = () => {
-        console.log("click");
-        console.log(document.cookie.split(" "))
-        dispatch(fetchLoginUserRequest({ email: "zehn@gmail.com", password: "123456789" }));
+        dispatch(fetchLoginUserRequest({ email: "zehan@gmail.com", password: "123456789" }));
     }
 
     useEffect(() => {
         console.log(fetchLoginUserStatus, "login");
         if (fetchLoginUserStatus === PENDING) {
             dispatch(setIsLoading(true));
+            setTimeout(() => {
+                dispatch(setIsLoading(false));
+            }, 1000);
         }
         if (fetchLoginUserStatus === FULFILLED) {
-            console.log(loginUser, "login user");
-            dispatch(setNotifyData(`${loginUser?.fullname} logged In`));
-        }
-    }, [fetchLoginUserStatus, loginUser, dispatch]);
 
-    useEffect(()=>{
-        console.log(token,"access token")
-    },[token])
+            if (token) {
+                if (loginUser?.fullname) {
+                    dispatch(setNotifyData({ type: "success", message: "user login successfully" }));
+                }
+                setTimeout(() => {
+                    dispatch(setNotifyData({ type: "", message: "" }));
+                }, 1000);
+                router.history("/");
+            }
+        }
+
+        if (fetchLoginUserStatus === REJECTED) {
+            if (loginError) {
+                dispatch(setNotifyData({ type: "error", message: loginError }));
+            }
+        }
+    }, [fetchLoginUserStatus, loginUser, dispatch, router, token, loginError]);
+
+    useEffect(() => {
+        if (!loading && loginError) {
+            dispatch(setNotifyData({ type: "error", message: loginError }));
+            setTimeout(() => {
+                dispatch(setNotifyData({ type: "", message: "" }));
+            }, 1300);
+        }
+    }, [loading, loginError, dispatch])
+
+    useEffect(() => {
+        console.log(token, "access token")
+    }, [token])
 
     return (
         <div className="w-full h-screen bg-gray-50 flex flex-col justify-center items-center">

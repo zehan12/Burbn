@@ -10,6 +10,7 @@ import { FULFILLED, IDLE, PENDING, REJECTED } from "../../constant/general";
 interface AuthState {
   loginUser: object;
   fetchLoginUserStatus: string;
+  loginError: string;
   token: string;
   requestToRegisterUser: string;
   registerUserDetails: object;
@@ -18,6 +19,7 @@ interface AuthState {
 const initialState: AuthState = {
   loginUser: {},
   fetchLoginUserStatus: IDLE,
+  loginError: "",
   token: "",
   requestToRegisterUser: IDLE,
   registerUserDetails: {},
@@ -35,8 +37,19 @@ const fetchLoginUserPendingReducer = (state: AuthState) => {
   state.fetchLoginUserStatus = PENDING;
 };
 
-const fetchLoginUserRejectedReducer = (state: AuthState) => {
+interface fetchLoginUserRejectedAction extends Action {
+  type: string;
+  payload: {
+    error: string;
+  };
+}
+
+const fetchLoginUserRejectedReducer = (
+  state: AuthState,
+  action: fetchLoginUserRejectedAction
+) => {
   state.fetchLoginUserStatus = REJECTED;
+  state.loginError = action.payload.error;
 };
 
 interface fetchLoginUserFulfilledAction extends Action {

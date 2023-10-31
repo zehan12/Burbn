@@ -2,6 +2,18 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { fetchLoginUserActionTypes } from "./auth.slice";
 import { requestToLoginUser } from "../../services/auth.service";
 
+type response = {
+  type: string;
+  errorMessage?: {
+    status: string;
+    error: string;
+  };
+  successMessage?: {
+    status: string;
+    error: string;
+  };
+};
+
 function* workerToFetchLoginUser(action: {
   type: string;
   payload: {
@@ -15,7 +27,8 @@ function* workerToFetchLoginUser(action: {
       type: fetchLoginUserActionTypes.PENDING,
       payload: null,
     });
-    const response = yield call(requestToLoginUser, {
+
+    const response: response = yield call(requestToLoginUser, {
       username: action.payload.username,
       email: action.payload.email,
       password: action.payload.password,
@@ -25,7 +38,9 @@ function* workerToFetchLoginUser(action: {
       // throw new Error(response.errorMessage);
       yield put({
         type: fetchLoginUserActionTypes.REJECTED,
-        payload: null,
+        payload: {
+          error: response?.errorMessage?.error,
+        },
       });
     }
 
@@ -37,14 +52,18 @@ function* workerToFetchLoginUser(action: {
     } else {
       yield put({
         type: fetchLoginUserActionTypes.REJECTED,
-        payload: null,
+        payload: {
+          error: "Error while login user.",
+        },
       });
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
     yield put({
       type: fetchLoginUserActionTypes.REJECTED,
-      payload: null,
+      payload: {
+        error: "error in login",
+      },
     });
   }
 }
